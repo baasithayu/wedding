@@ -191,7 +191,7 @@
 							</div>
 						</div>
 						<div class="col-md-4 col-sm-4">
-							<button type="button" onclick="swallConfirmation()" class="btn btn-default btn-block">Saya Berkenan Hadir</button>
+							<button id="btn_kehadiran" type="button" onclick="swallConfirmation()" class="btn btn-default btn-block">Berkenan Hadir</button>
 						</div>
 					</form>
 				</div>
@@ -258,7 +258,7 @@
 			enableUtc: false
 		});
 
-		function swallConfirmation() {
+		async function swallConfirmation() {
 			if ($('#name').val() == '' || $('#address').val() == '') { 
 				swal({
 					title: "Mohon maaf",
@@ -267,11 +267,15 @@
 				});
 
 			} else {
+				$("#btn_kehadiran").text("Processing...");
+				$("#btn_kehadiran").append( '<span class="load_save spinner-border spinner-border-sm ml-2 mr-2" role="status" aria-hidden="true"></span>');
+				$("#btn_kehadiran").prop("disabled", true);
+
 				var name 	= $('#name').val().replaceAll(" ", "%20");
 				var address = $('#address').val().replaceAll(" ", "%20");
 				var url 	= `https://api.telegram.org/bot5280690343:AAE1vL-C_9Qt6qabt6AZ8Mlp_dm3o3G21Qs/sendMessage?chat_id=5759867796&text=${name}%0A${address}`;
 
-				$.ajax({
+				await $.ajax({
 					type: "GET",
 					url: url,
 					dataType: "json"
@@ -295,6 +299,10 @@
 						});
 					}
 				});
+
+				$(".load_save").remove();
+				$("#btn_kehadiran").html("Berkenan Hadir");
+				$("#btn_kehadiran").prop("disabled", false);
 			}
 		}
 	</script>
